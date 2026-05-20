@@ -20,6 +20,19 @@
   <description>PMKT MVP1 shared kernel — parent POM + BOM + RFC 9457 ProblemDetail + UUIDv7 + event schema + ArchUnit/Spotless/Checkstyle config.</description>
   <url>https://github.com/thanhpt-osp/pmkt-shared</url>
 
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages — thanhpt-osp/pmkt-shared</name>
+      <url>https://maven.pkg.github.com/thanhpt-osp/pmkt-shared</url>
+    </repository>
+    <snapshotRepository>
+      <id>github</id>
+      <name>GitHub Packages Snapshots — thanhpt-osp/pmkt-shared</name>
+      <url>https://maven.pkg.github.com/thanhpt-osp/pmkt-shared</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <properties>
     <!-- ============================================================ -->
     <!-- Version alignment gate — T1.1 chốt 2026-05-20                -->
