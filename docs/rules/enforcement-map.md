@@ -15,8 +15,8 @@
 | **#7** | Configuration management (profile + externalized + secret manager) | [configuration-management-rules.md](configuration-management-rules.md) ✅ T3.8 | `@ConfigurationProperties` + `@Validated` fail-fast; secret IT defer B4 (TD-09) | `application*.yml` + ConfigurationProperties record | Active partial (doc ✅, secret IT ⏳ B4) |
 | **#8** | API contract (URI versioning + RFC 9457 ProblemDetail + OpenAPI + deprecation) | [api-contract-rules.md](api-contract-rules.md) ✅ T3.9 | ProblemDetail policy test ✅ + springdoc gen ⏳ B4 (TD-05) | `ProblemDetailFactory.java` ✅ T1.2 / `*Request`-`*Response` record pattern | Partial (doc ✅, springdoc B4) |
 | **#9** | Database migration (Flyway, idempotent, versioned) | [db-migration-rules.md](db-migration-rules.md) ✅ T3.10 | Flyway `validate` + naming convention checker | `pmkt-shared/docs/rules/db-migration-rules.md` ✅ T3.10 / Flyway plugin pluginManagement ✅ T2.1 / V001 per-service ⏳ T2.2-T2.7 | Partial (doc ✅, V001 in-progress) |
-| **#10** | Security baseline (Keycloak JWT + RBAC + tenant scope + audit) | [security-baseline-rules.md](security-baseline-rules.md) ✅ T3.12 | Spring Security config + JWT IT + no-permitAll ArchUnit ⏳ B4 (TD-07) | T4.5 Keycloak realm ✅ + Spring Security ⏳ B4 | Partial (doc ✅, impl B4) |
-| **#13** | Domain event versioning (envelope + additive + deprecation + outbox + idempotency) | [domain-event-versioning-rules.md](domain-event-versioning-rules.md) ✅ T3.13 | EventEnvelope contract test ✅ + schema registry IT ⏳ B4 (TD-08) | `EventEnvelope.java` ✅ T1.2 / `EventEnvelopeTest.java` ✅ | Partial (doc + envelope ✅, registry B4) |
+| **#10** | Security baseline (Keycloak JWT + RBAC + tenant scope + audit) | [security-baseline-rules.md](security-baseline-rules.md) ✅ T3.12 | Spring Security config ✅ B4 Phase 4.9 + JWT decode test ✅ (TD-07 resolved) | T4.5 Keycloak realm ✅ + `PmktSecurityChainSupport` ✅ B4 + 6 service `SecurityConfig` consume ✅ | **Active** (B4 Phase 4.9 — TD-07 resolved) |
+| **#13** | Domain event versioning (envelope + additive + deprecation + outbox + idempotency) | [domain-event-versioning-rules.md](domain-event-versioning-rules.md) ✅ T3.13 | EventEnvelope contract test ✅ + schema registry BACKWARD compatibility ✅ B4 Phase 4.6 (TD-08 resolved) | `EventEnvelope.java` ✅ T1.2 / `EventEnvelopeTest.java` ✅ / `cp-schema-registry` 7.9.0 ✅ B4 | **Active** (B4 Phase 4.6 — TD-08 resolved; outbox publisher service-side defer B5) |
 
 ## Phủ rule (coverage)
 
@@ -31,13 +31,13 @@
 | 7 | ✅ T3.8 | ✅ ConfigurationProperties (secret IT B4) | Active partial |
 | 8 | ✅ T3.9 | ✅ partial (T1.2 ProblemDetail), full springdoc B4 | Active partial |
 | 9 | ✅ T3.10 | ✅ T2.1 plumbing, V001 in-progress | Active partial |
-| 10 | ✅ T3.12 | ✅ T4.5 Keycloak realm, impl B4 (TD-07) | Active partial |
-| 13 | ✅ T3.13 | ✅ partial (T1.2 envelope), registry B4 | Active partial |
+| 10 | ✅ T3.12 | ✅ B4 Phase 4.9 — Spring Security baseline + 6 service consume (TD-07 ✅) | **Active** (B4) |
+| 13 | ✅ T3.13 | ✅ B4 Phase 4.6 — Schema Registry BACKWARD + envelope test (TD-08 ✅) | **Active** (B4) |
 
 **Tổng**: 11 rule.
-- **11/11 rule có doc** ✅ — sau Cổng 3 (B3) hoàn thiện toàn bộ rule publish.
-- **CI gate Active đầy đủ** (B3 hoàn tất): Rule 3 (Spotless + Checkstyle), Rule 5 (JaCoCo 70/60/80), Rule 6 (NoSystemOutArchTest + Logback template).
-- **Active partial** (gate có phần, full impl defer B4): Rule 1 (CleanArchTest defer), 2 (engine defer), 7 (secret IT defer TD-09), 8 (springdoc full defer TD-05), 9 (per-service V001 ✅), 10 (Spring Security defer TD-07), 13 (schema registry defer TD-08).
+- **11/11 rule có doc** ✅ — sau Cổng 3 (B3).
+- **CI gate Active đầy đủ** (B3 + B4): Rule 3 (Spotless+Checkstyle), 5 (JaCoCo 70/60/80), 6 (NoSystemOutArchTest+Logback), **10** (Spring Security baseline ✅ B4), **13** (Schema Registry ✅ B4).
+- **Active partial** (gate có phần, full impl defer B5): Rule 1 (CleanArchTest B5 TD-06), 2 (engine B5), 7 (secret IT B5 TD-09), 8 (springdoc full B5 TD-05), 9 (per-service V001 ✅).
 - **Convention-only** (manual review): Rule 4 (ADR).
 - Toàn bộ defer item theo dõi ở [../tech-debt-ledger.md](../tech-debt-ledger.md).
 

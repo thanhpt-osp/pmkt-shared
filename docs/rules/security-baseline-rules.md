@@ -2,7 +2,8 @@
 
 > **Rule §7 #10 (BDR)** — Authentication (Keycloak JWT) + Authorization (RBAC + tenant scope) + audit + secret. T3.12.
 >
-> **Trạng thái**: Convention publish B3. Spring Security + Keycloak full setup defer B4 (T4.5 + TD-07).
+> **Trạng thái**: ✅ **Active** sau B4 Phase 4.9 (TD-07 resolved). Convention publish B3 + impl gate B4.
+> Kernel: `pmkt-shared/.../security/{JwtTenantClaimConverter, PmktJwtAuthenticationConverter, PmktSecurityChainSupport}`. 6 service consume qua `SecurityConfig` delegate.
 
 ## WHAT — Quy tắc
 
