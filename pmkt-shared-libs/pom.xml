@@ -72,6 +72,16 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <!-- T3.7 — activate JaCoCo từ pluginManagement (config canonical ở parent pom). -->
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <!-- TD-02 — activate Failsafe (chưa có *IT.java ở libs nhưng để sẵn). -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
     </plugins>
   </build>
 </project>

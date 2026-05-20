@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PMKT canonical Logback template (Rule §7 #6 — logging-monitoring-rules.md §10).
+  Service copy file này thành src/main/resources/logback-spring.xml và thay ${SERVICE_NAME}.
+  KHÔNG sửa file này trực tiếp — sửa rule doc + bump template version.
+-->
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+  <!-- Service identity — service override -->
+  <property name="SERVICE_NAME" value="pmkt-unknown"/>
+
+  <!-- ====================== dev / test ======================== -->
+  <!-- Human-readable, MDC traceId/spanId visible. -->
+  <springProfile name="dev,test,default">
+    <root level="INFO">
+      <appender-ref ref="CONSOLE"/>
+    </root>
+    <logger name="com.dopai.pmkt" level="DEBUG"/>
+  </springProfile>
+
+  <!-- ====================== it (integration test) ============= -->
+  <!-- Quieter — chỉ INFO trở lên cho pmkt code, framework WARN. -->
+  <springProfile name="it">
+    <root level="WARN">
+      <appender-ref ref="CONSOLE"/>
+    </root>
+    <logger name="com.dopai.pmkt" level="INFO"/>
+  </springProfile>
+
+  <!-- ====================== prod ============================== -->
+  <!-- JSON single-line cho Loki/OpenSearch ingest. -->
+  <springProfile name="prod">
+    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder class="ch.qos.logback.classic.encoder.JsonEncoder">
+        <withSequenceNumber>false</withSequenceNumber>
+        <withTimestamp>true</withTimestamp>
+        <withNanoseconds>false</withNanoseconds>
+        <withLevel>true</withLevel>
+        <withThreadName>true</withThreadName>
+        <withLoggerName>true</withLoggerName>
+        <withMessage>true</withMessage>
+        <withMDC>true</withMDC>
+        <withKeyValuePairs>true</withKeyValuePairs>
+        <withMarker>false</withMarker>
+        <withException>true</withException>
+      </encoder>
+    </appender>
+    <root level="INFO">
+      <appender-ref ref="JSON_CONSOLE"/>
+    </root>
+    <logger name="com.dopai.pmkt" level="INFO"/>
+  </springProfile>
+</configuration>

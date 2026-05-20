@@ -133,6 +133,66 @@
           <artifactId>flyway-maven-plugin</artifactId>
           <version>${flyway-maven-plugin.version}</version>
         </plugin>
+        <plugin>
+          <!-- JaCoCo coverage — T3.5 + T3.7 (Rule §7 #5). -->
+          <!-- Threshold 70% line / 60% branch / 80% class. Threshold đổi = ADR. -->
+          <!-- Version managed by spring-boot-starter-parent. -->
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>jacoco-prepare-agent</id>
+              <goals><goal>prepare-agent</goal></goals>
+            </execution>
+            <execution>
+              <id>jacoco-report</id>
+              <phase>verify</phase>
+              <goals><goal>report</goal></goals>
+            </execution>
+            <execution>
+              <id>jacoco-check</id>
+              <phase>verify</phase>
+              <goals><goal>check</goal></goals>
+              <configuration>
+                <rules>
+                  <rule>
+                    <element>BUNDLE</element>
+                    <limits>
+                      <limit><counter>LINE</counter><minimum>0.70</minimum></limit>
+                      <limit><counter>BRANCH</counter><minimum>0.60</minimum></limit>
+                      <limit><counter>CLASS</counter><minimum>0.80</minimum></limit>
+                    </limits>
+                  </rule>
+                </rules>
+                <excludes>
+                  <exclude>**/*Application.class</exclude>
+                  <exclude>**/config/**</exclude>
+                  <exclude>**/dto/**</exclude>
+                  <exclude>**/api/*Request.class</exclude>
+                  <exclude>**/api/*Response.class</exclude>
+                  <exclude>**/generated/**</exclude>
+                  <exclude>**/package-info.class</exclude>
+                  <exclude>**/testkit/**</exclude>
+                </excludes>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <!-- Failsafe IT — resolves TD-02. Service activate bằng cách thêm artifact-only block. -->
+          <!-- Version managed by spring-boot-starter-parent. -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>failsafe-integration-test</id>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
