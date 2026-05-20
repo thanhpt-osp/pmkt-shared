@@ -5,14 +5,14 @@
 >
 > Quy tắc: KHÔNG xoá item khi resolve — đổi trạng thái thành ✅ Resolved + commit hash. Audit trail bắt buộc.
 
-## Trạng thái tổng (cập nhật 2026-05-20 — sau Cổng 2)
+## Trạng thái tổng (cập nhật 2026-05-20 — sau Cổng 3)
 
 | ID | Mô tả | Nguồn | Rủi ro | Resolve-at | Trạng thái |
 |---|---|---|---|---|---|
 | **TD-01** | ApplicationTest pmkt-core-service đã chuyển Testcontainers (cần Docker); 5 service khác vẫn disable `DataSourceAutoConfiguration` ở profile `test`. Bất đối xứng pattern. | Phase 2.5a Batch 2 | Medium — dev local không Docker sẽ fail ApplicationTest của pmkt-core; CI ok. | **B4** khi 5 service khác thêm JPA bean → align toàn bộ về Testcontainers. | 🔴 Open |
-| **TD-02** | `maven-failsafe-plugin` chỉ có ở `pmkt-audit-notification-service`. Cần move binding lên `pmkt-shared` parent pom để mọi service tự kích hoạt IT khi có file `*IT.java`. | Phase 2.5b Batch 2 | Low — fix 1 lần, downstream tự inherit. | **Batch 3 Phase 3.1** (gom với JaCoCo). | 🟡 Scheduled |
+| **TD-02** | `maven-failsafe-plugin` chỉ có ở `pmkt-audit-notification-service`. Cần move binding lên `pmkt-shared` parent pom để mọi service tự kích hoạt IT khi có file `*IT.java`. | Phase 2.5b Batch 2 | Low — fix 1 lần, downstream tự inherit. | Batch 3 Phase 3.1. | ✅ **Resolved 2026-05-20 commit `1c9d69a`** — failsafe ở parent pluginManagement; service replicate qua copy-snippet (poly-repo limitation). |
 | **TD-03** | Port assignment thực tế: `audit-notification = 8084`, `integration = 8085` (swap so với footnote plan §6). Documentation chưa cập nhật. | Phase 2.4 Batch 2 | Low — chỉ doc, code đã đúng. | **Cổng cuối** (B5) khi viết deployment doc. | 🔴 Open |
-| **TD-04** | JaCoCo coverage threshold chưa active — Rule §7 #5 chỉ có placeholder `T3.5`. | Cổng 2 review | High — không có gate coverage = quality drift. | **Batch 3 Phase 3.1**. | 🟡 Scheduled |
+| **TD-04** | JaCoCo coverage threshold chưa active — Rule §7 #5 chỉ có placeholder `T3.5`. | Cổng 2 review | High — không có gate coverage = quality drift. | Batch 3 Phase 3.1. | ✅ **Resolved 2026-05-20 commit `1c9d69a`** — JaCoCo 70/60/80 active, gate xanh pmkt-shared-libs (78% line / 100% class). Service copy-snippet B4. |
 | **TD-05** | springdoc-openapi mới có dependency, chưa enable `@OpenAPIDefinition` + `@Tag` + schema gen. Rule §7 #8 chỉ ProblemDetail partial. | Cổng 1 + 2 review | Medium — API contract chưa machine-validated. | **B4** khi service có Controller business. | 🔴 Open |
 | **TD-06** | `CleanArchTest` ArchUnit chưa viết — Rule §7 #1 entry chỉ có scope-guard + Modulith verify. Layer dependency rule (api→app→domain) chưa enforce. | Cổng 1 review | Medium — code có thể vi phạm Clean Arch không bị catch. | **B4** khi template module mở rộng (≥2 module). | 🔴 Open |
 | **TD-07** | Keycloak + Spring Security + JWT decode test chưa setup. Rule §7 #10 chỉ doc. | Cổng 1 list | High (security) — nhưng MVP1 deploy nội bộ → defer chấp nhận được. | **B4 (T4.5)**. | 🔴 Open |
