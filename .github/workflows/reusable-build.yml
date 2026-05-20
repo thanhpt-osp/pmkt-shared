@@ -15,10 +15,6 @@ on:
         description: 'Maven project root'
         type: string
         default: '.'
-      bootstrap-pmkt-shared:
-        description: 'Clone + install pmkt-shared trước build (true cho 6 service)'
-        type: boolean
-        default: true
 
 jobs:
   build:
@@ -26,7 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,18 +34,14 @@ jobs:
           cache: 'maven'
 
       - name: Bootstrap pmkt-shared (clone + install local m2)
-        if: ${{ inputs.bootstrap-pmkt-shared == true && github.repository != 'thanhpt-osp/pmkt-shared' }}
-        env:
-          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+        if: github.repository != 'thanhpt-osp/pmkt-shared'
         run: |
-          git clone --depth 1 "https://x-access-token:${GH_PAT}@github.com/thanhpt-osp/pmkt-shared.git" /tmp/pmkt-shared
+          git clone --depth 1 https://github.com/thanhpt-osp/pmkt-shared.git /tmp/pmkt-shared
           cd /tmp/pmkt-shared
           mvn -B clean install -DskipTests -q
 
       - name: Build & test
         working-directory: ${{ inputs.working-directory }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ${{ inputs.build-command }}
 
       - name: Upload Surefire reports
