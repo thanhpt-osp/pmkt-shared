@@ -18,13 +18,12 @@ import org.testcontainers.utility.DockerImageName;
  * }
  * }</pre>
  *
- * <p>Service phải include {@code org.testcontainers:kafka} test scope vì class này declare
- * {@code <optional>true</optional>}.
+ * <p>Service phải include {@code org.testcontainers:kafka} test scope vì class này declare {@code
+ * <optional>true</optional>}.
  */
 public final class KafkaContainerSupport {
 
-  private static final DockerImageName IMAGE =
-      DockerImageName.parse("confluentinc/cp-kafka:7.6.1");
+  private static final DockerImageName IMAGE = DockerImageName.parse("confluentinc/cp-kafka:7.6.1");
 
   private static final ConfluentKafkaContainer CONTAINER =
       new ConfluentKafkaContainer(IMAGE).withReuse(true);

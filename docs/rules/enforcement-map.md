@@ -10,13 +10,13 @@
 | **#2** | Accounting invariants (Debit=Credit, sổ cái projection, audit immutable, tenant scope, soft-posting, đa tệ, kỳ closed) | [accounting-invariants.md](accounting-invariants.md) | DB constraint + role-grant + JPA filter + state-machine test | Flyway V001 ⏳ T2.x B2 / engine code ⏳ B4 | B2 + B4 |
 | **#3** | Coding style (Google Java Format, naming, package layout) | [coding-style.md](coding-style.md) | Spotless + Checkstyle | `pmkt-shared/pom.xml` (Spotless) + `pmkt-checkstyle.xml` ✅ T1.1, T1.2 | Active (CI-blocking on every PR) |
 | **#4** | ADR lifecycle + numbering | [adr-template.md](adr-template.md) | Manual review + checklist (no auto-gate; convention only) | `docs/adr/NNNN-title.md` numbering | Active (convention only, no CI) |
-| **#5** | Test coverage threshold (TBD owner Batch 2) | (chưa viết) ⏳ T3.5 | JaCoCo `coverage-threshold` enforce | `pmkt-shared/pom.xml` jacoco plugin ⏳ T3.7 | Pending B2 (T3.5, T3.7) |
-| **#6** | Logging + monitoring (level + format + no-PII) | (chưa viết) ⏳ T3.6 | Logback config + SLF4J detector + ArchUnit no-System.out | Logback XML + custom ArchUnit ⏳ B2 | Pending B2 |
-| **#7** | Configuration management (profile + secret manager) | (chưa viết) ⏳ T3.8 | Spring profile validation + secret manager integration test | `application.yml` profile + integration test ⏳ B4 | Pending B2 (T3.8) + B4 |
-| **#8** | API contract (RFC 9457 ProblemDetail, OpenAPI YAML, versioning) | (chưa viết) ⏳ T3.9 | springdoc-openapi schema generation + ProblemDetail policy test | `ProblemDetailFactory.java` ✅ T1.2 / OpenAPI gen ⏳ B4 | Partial (T1.2 ✅, springdoc B4) |
+| **#5** | Test coverage threshold (70% line / 60% branch / 80% class) | [test-coverage-rules.md](test-coverage-rules.md) ✅ T3.5 | JaCoCo `check` bind verify phase + Failsafe IT | `pmkt-shared/pom.xml` pluginManagement ✅ T3.7 / activate `pmkt-shared-libs/pom.xml` ✅ | **Active** (B3 Phase 3.1) |
+| **#6** | Logging + monitoring (level + format + no-PII + correlation MDC) | [logging-monitoring-rules.md](logging-monitoring-rules.md) ✅ T3.6 | ArchUnit `NoSystemOutArchTest` + Logback template + manual no-PII review | `NoSystemOutArchTest.java` ✅ + `logback-template.xml` ✅ | **Active** (B3 Phase 3.2) |
+| **#7** | Configuration management (profile + externalized + secret manager) | [configuration-management-rules.md](configuration-management-rules.md) ✅ T3.8 | `@ConfigurationProperties` + `@Validated` fail-fast; secret IT defer B4 (TD-09) | `application*.yml` + ConfigurationProperties record | Active partial (doc ✅, secret IT ⏳ B4) |
+| **#8** | API contract (URI versioning + RFC 9457 ProblemDetail + OpenAPI + deprecation) | [api-contract-rules.md](api-contract-rules.md) ✅ T3.9 | ProblemDetail policy test ✅ + springdoc gen ⏳ B4 (TD-05) | `ProblemDetailFactory.java` ✅ T1.2 / `*Request`-`*Response` record pattern | Partial (doc ✅, springdoc B4) |
 | **#9** | Database migration (Flyway, idempotent, versioned) | [db-migration-rules.md](db-migration-rules.md) ✅ T3.10 | Flyway `validate` + naming convention checker | `pmkt-shared/docs/rules/db-migration-rules.md` ✅ T3.10 / Flyway plugin pluginManagement ✅ T2.1 / V001 per-service ⏳ T2.2-T2.7 | Partial (doc ✅, V001 in-progress) |
-| **#10** | Security baseline (Keycloak JWT, RBAC, audit) | (chưa viết) ⏳ T3.12 | Spring Security config + integration test JWT decode + ArchUnit no-anonymous-endpoint | T4.5 Keycloak setup ⏳ + Security ArchUnit test ⏳ B4 | Pending B1 (T4.5) + B4 |
-| **#13** | Domain event versioning (envelope + additive v1 + deprecation) | (chưa viết) ⏳ T3.13 | Schema registry compatibility test + EventEnvelope contract test | `EventEnvelope.java` ✅ T1.2 / schema registry ⏳ B4 | Partial (T1.2 ✅, registry B4) |
+| **#10** | Security baseline (Keycloak JWT + RBAC + tenant scope + audit) | [security-baseline-rules.md](security-baseline-rules.md) ✅ T3.12 | Spring Security config + JWT IT + no-permitAll ArchUnit ⏳ B4 (TD-07) | T4.5 Keycloak realm ✅ + Spring Security ⏳ B4 | Partial (doc ✅, impl B4) |
+| **#13** | Domain event versioning (envelope + additive + deprecation + outbox + idempotency) | [domain-event-versioning-rules.md](domain-event-versioning-rules.md) ✅ T3.13 | EventEnvelope contract test ✅ + schema registry IT ⏳ B4 (TD-08) | `EventEnvelope.java` ✅ T1.2 / `EventEnvelopeTest.java` ✅ | Partial (doc + envelope ✅, registry B4) |
 
 ## Phủ rule (coverage)
 
@@ -26,19 +26,20 @@
 | 2 | ✅ | ⏳ (B2 Flyway + B4 engine) | Active partial |
 | 3 | ✅ | ✅ T1.1+T1.2 | **Active** |
 | 4 | ✅ | (convention only — no CI) | **Active** |
-| 5 | ⏳ T3.5 | ⏳ T3.7 JaCoCo | Pending B2 |
-| 6 | ⏳ T3.6 | ⏳ B2 | Pending B2 |
-| 7 | ⏳ T3.8 | ⏳ B4 | Pending B2 + B4 |
-| 8 | ⏳ T3.9 | ✅ partial (T1.2 ProblemDetail), full springdoc B4 | Pending B2 + B4 |
+| 5 | ✅ T3.5 | ✅ T3.7 JaCoCo (70/60/80) | **Active** (B3) |
+| 6 | ✅ T3.6 | ✅ NoSystemOutArchTest + Logback template | **Active** (B3) |
+| 7 | ✅ T3.8 | ✅ ConfigurationProperties (secret IT B4) | Active partial |
+| 8 | ✅ T3.9 | ✅ partial (T1.2 ProblemDetail), full springdoc B4 | Active partial |
 | 9 | ✅ T3.10 | ✅ T2.1 plumbing, V001 in-progress | Active partial |
-| 10 | ⏳ T3.12 | ⏳ B1 (T4.5) + B4 | Pending B1 + B4 |
-| 13 | ⏳ T3.13 | ✅ partial (T1.2 envelope), registry B4 | Pending B3 + B4 |
+| 10 | ✅ T3.12 | ✅ T4.5 Keycloak realm, impl B4 (TD-07) | Active partial |
+| 13 | ✅ T3.13 | ✅ partial (T1.2 envelope), registry B4 | Active partial |
 
 **Tổng**: 11 rule.
-- **5 rule có doc** (1, 2, 3, 4 + 11/this) ✅ — Batch 1 hoàn thiện
-- **6 rule chưa có doc** (5, 6, 7, 8, 9, 10, 13) ⏳ — Batch 3 (T3.5-T3.10, T3.12, T3.13)
-- **CI gate active**: Rule 3 (Spotless + Checkstyle), Rule 1 partial (T1.2 scope guard + T1.4 Modulith)
-- **CI gate pending**: rule còn lại — kế hoạch ở plan §4 Track 3
+- **11/11 rule có doc** ✅ — sau Cổng 3 (B3) hoàn thiện toàn bộ rule publish.
+- **CI gate Active đầy đủ** (B3 hoàn tất): Rule 3 (Spotless + Checkstyle), Rule 5 (JaCoCo 70/60/80), Rule 6 (NoSystemOutArchTest + Logback template).
+- **Active partial** (gate có phần, full impl defer B4): Rule 1 (CleanArchTest defer), 2 (engine defer), 7 (secret IT defer TD-09), 8 (springdoc full defer TD-05), 9 (per-service V001 ✅), 10 (Spring Security defer TD-07), 13 (schema registry defer TD-08).
+- **Convention-only** (manual review): Rule 4 (ADR).
+- Toàn bộ defer item theo dõi ở [../tech-debt-ledger.md](../tech-debt-ledger.md).
 
 ## Manual review areas (không phải mọi rule có auto-gate)
 
@@ -62,6 +63,14 @@ Khi thêm rule mới hoặc thay đổi gate:
 - [accounting-invariants.md](accounting-invariants.md) — Rule §7 #2
 - [coding-style.md](coding-style.md) — Rule §7 #3
 - [adr-template.md](adr-template.md) — Rule §7 #4
+- [test-coverage-rules.md](test-coverage-rules.md) — Rule §7 #5
+- [logging-monitoring-rules.md](logging-monitoring-rules.md) — Rule §7 #6
+- [configuration-management-rules.md](configuration-management-rules.md) — Rule §7 #7
+- [api-contract-rules.md](api-contract-rules.md) — Rule §7 #8
+- [db-migration-rules.md](db-migration-rules.md) — Rule §7 #9
+- [security-baseline-rules.md](security-baseline-rules.md) — Rule §7 #10
+- [domain-event-versioning-rules.md](domain-event-versioning-rules.md) — Rule §7 #13
+- [../tech-debt-ledger.md](../tech-debt-ledger.md) — TD registry
 - BDR §7 — Bộ Rule nền tảng (tổng)
 - Plan §4 Track 3 — T3.1-T3.13 (toàn bộ rule task list)
 - Plan §6 Cổng 3 — Rules publish criteria
