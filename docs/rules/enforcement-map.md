@@ -14,7 +14,7 @@
 | **#6** | Logging + monitoring (level + format + no-PII) | (chưa viết) ⏳ T3.6 | Logback config + SLF4J detector + ArchUnit no-System.out | Logback XML + custom ArchUnit ⏳ B2 | Pending B2 |
 | **#7** | Configuration management (profile + secret manager) | (chưa viết) ⏳ T3.8 | Spring profile validation + secret manager integration test | `application.yml` profile + integration test ⏳ B4 | Pending B2 (T3.8) + B4 |
 | **#8** | API contract (RFC 9457 ProblemDetail, OpenAPI YAML, versioning) | (chưa viết) ⏳ T3.9 | springdoc-openapi schema generation + ProblemDetail policy test | `ProblemDetailFactory.java` ✅ T1.2 / OpenAPI gen ⏳ B4 | Partial (T1.2 ✅, springdoc B4) |
-| **#9** | Database migration (Flyway, idempotent, versioned) | (chưa viết) ⏳ T3.10 | Flyway `validate` + naming convention checker | `pmkt-shared/db-migration-rules.md` ⏳ T3.10 + Flyway plugin | Pending B2 (T2.x, T3.10) |
+| **#9** | Database migration (Flyway, idempotent, versioned) | [db-migration-rules.md](db-migration-rules.md) ✅ T3.10 | Flyway `validate` + naming convention checker | `pmkt-shared/docs/rules/db-migration-rules.md` ✅ T3.10 / Flyway plugin pluginManagement ✅ T2.1 / V001 per-service ⏳ T2.2-T2.7 | Partial (doc ✅, V001 in-progress) |
 | **#10** | Security baseline (Keycloak JWT, RBAC, audit) | (chưa viết) ⏳ T3.12 | Spring Security config + integration test JWT decode + ArchUnit no-anonymous-endpoint | T4.5 Keycloak setup ⏳ + Security ArchUnit test ⏳ B4 | Pending B1 (T4.5) + B4 |
 | **#13** | Domain event versioning (envelope + additive v1 + deprecation) | (chưa viết) ⏳ T3.13 | Schema registry compatibility test + EventEnvelope contract test | `EventEnvelope.java` ✅ T1.2 / schema registry ⏳ B4 | Partial (T1.2 ✅, registry B4) |
 
@@ -30,7 +30,7 @@
 | 6 | ⏳ T3.6 | ⏳ B2 | Pending B2 |
 | 7 | ⏳ T3.8 | ⏳ B4 | Pending B2 + B4 |
 | 8 | ⏳ T3.9 | ✅ partial (T1.2 ProblemDetail), full springdoc B4 | Pending B2 + B4 |
-| 9 | ⏳ T3.10 | ⏳ B2 | Pending B2 |
+| 9 | ✅ T3.10 | ✅ T2.1 plumbing, V001 in-progress | Active partial |
 | 10 | ⏳ T3.12 | ⏳ B1 (T4.5) + B4 | Pending B1 + B4 |
 | 13 | ⏳ T3.13 | ✅ partial (T1.2 envelope), registry B4 | Pending B3 + B4 |
 

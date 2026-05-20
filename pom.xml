@@ -47,11 +47,13 @@
     <testcontainers.version>1.21.4</testcontainers.version>
     <jug.version>5.2.0</jug.version>
     <archunit.version>1.4.2</archunit.version>
+    <!-- Flyway version delegate sang spring-boot-dependencies (Flyway 11.x) — service add flyway-core dep test-scope cho IT -->
 
     <!-- Plugin versions -->
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
     <spotless-maven-plugin.version>2.46.0</spotless-maven-plugin.version>
     <google-java-format.version>1.22.0</google-java-format.version>
+    <flyway-maven-plugin.version>11.7.2</flyway-maven-plugin.version>
   </properties>
 
   <modules>
@@ -123,6 +125,13 @@
               <endWithNewline/>
             </java>
           </configuration>
+        </plugin>
+        <plugin>
+          <!-- Flyway maven plugin — service tự bind execution (e.g. ad-hoc CLI `mvn flyway:migrate`). -->
+          <!-- Production migration chạy via Spring Boot auto (flyway-core dep) — KHÔNG qua plugin. -->
+          <groupId>org.flywaydb</groupId>
+          <artifactId>flyway-maven-plugin</artifactId>
+          <version>${flyway-maven-plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
