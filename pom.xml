@@ -173,6 +173,9 @@
                   <exclude>**/generated/**</exclude>
                   <exclude>**/package-info.class</exclude>
                   <exclude>**/testkit/**</exclude>
+                  <!-- Security chain helper = config-like (Spring HttpSecurity DSL chain).
+                       Yêu cầu full Spring web context. B4 Phase 4.10 E2E smoke wire-up. -->
+                  <exclude>**/security/PmktSecurityChainSupport.class</exclude>
                 </excludes>
               </configuration>
             </execution>
