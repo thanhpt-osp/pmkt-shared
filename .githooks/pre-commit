@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# PMKT pre-commit hook — Spotless apply + auto re-stage
+#
+# T1.9 (Batch 2). Auto-fix Google Java Format trên file Java đã stage.
+# Checkstyle check KHÔNG chạy ở pre-commit (chậm); CI gate sẽ catch.
+#
+# Bypass tạm thời: git commit --no-verify (dùng dè dặt).
+
+set -euo pipefail
+
+# Lọc Java file đã stage (Added/Copied/Modified)
+staged_java=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.java$' || true)
+
+if [ -z "$staged_java" ]; then
+  exit 0
+fi
+
+echo "[pmkt pre-commit] Spotless apply trên $(echo "$staged_java" | wc -l | tr -d ' ') file Java..."
+
+# Spotless apply không có per-file API; chạy toàn module ảnh hưởng = đơn giản, đủ nhanh
+if ! mvn -B -q spotless:apply > /tmp/pmkt-spotless.log 2>&1; then
+  echo "[pmkt pre-commit] ❌ Spotless apply FAILED. Xem /tmp/pmkt-spotless.log."
+  exit 1
+fi
+
+# Re-stage file Java đã được Spotless format lại
+echo "$staged_java" | while read -r f; do
+  if [ -f "$f" ]; then
+    git add "$f"
+  fi
+done
+
+echo "[pmkt pre-commit] ✅ Spotless apply OK + re-staged."

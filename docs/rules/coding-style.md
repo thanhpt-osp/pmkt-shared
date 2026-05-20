@@ -125,7 +125,7 @@ com.dopai.pmkt.{service}.{module}/
 
 CI workflow `reusable-build.yml` chạy phase `validate` → Spotless + Checkstyle. Vi phạm = build FAIL.
 
-Local pre-commit hook (T1.9, deferred Batch 2): `mvn spotless:apply` auto-fix trước commit.
+Local pre-commit hook (T1.9 ✅ Batch 2): `mvn spotless:apply` auto-fix trên file Java đã stage + re-stage. Setup: `./scripts/install-hooks.sh` sau khi clone — xem [dev-onboarding.md](../dev-onboarding.md).
 
 ## Liên quan
 
