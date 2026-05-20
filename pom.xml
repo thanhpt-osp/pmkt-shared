@@ -176,6 +176,9 @@
                   <!-- Security chain helper = config-like (Spring HttpSecurity DSL chain).
                        Yêu cầu full Spring web context. B4 Phase 4.10 E2E smoke wire-up. -->
                   <exclude>**/security/PmktSecurityChainSupport.class</exclude>
+                  <!-- TD-06 — AbstractCleanArchTest là abstract base cho 6 service test
+                       subclass, không exercise được trong cùng libs module. -->
+                  <exclude>**/archtest/**</exclude>
                 </excludes>
               </configuration>
             </execution>

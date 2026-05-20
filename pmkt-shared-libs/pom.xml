@@ -59,15 +59,27 @@
       <optional>true</optional>
     </dependency>
 
+    <!-- ArchUnit + JUnit Jupiter API — TD-06 (Rule §7 #1) AbstractCleanArchTest ở src/main.
+         Optional + compile scope: consumer service phải tự khai báo archunit-junit5 test-scope
+         khi subclass AbstractCleanArchTest. JUnit Jupiter API đã có sẵn ở consumer qua
+         spring-boot-starter-test → không leak vào runtime. -->
+    <dependency>
+      <groupId>com.tngtech.archunit</groupId>
+      <artifactId>archunit-junit5</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
     <!-- Test -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.tngtech.archunit</groupId>
-      <artifactId>archunit-junit5</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
