@@ -1,0 +1,59 @@
+name: Reusable Maven Build
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: 'JDK version'
+        type: string
+        default: '21'
+      build-command:
+        description: 'Maven command'
+        type: string
+        default: 'mvn -B clean verify'
+      working-directory:
+        description: 'Maven project root'
+        type: string
+        default: '.'
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: 'temurin'
+          cache: 'maven'
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
+
+      - name: Build & test
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ${{ inputs.build-command }}
+
+      - name: Upload Surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports-${{ github.run_id }}
+          path: '**/target/surefire-reports/'
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload Spring Modulith docs
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spring-modulith-docs-${{ github.run_id }}
+          path: '**/target/spring-modulith-docs/'
+          retention-days: 7
+          if-no-files-found: ignore

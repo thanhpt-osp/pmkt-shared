@@ -1,0 +1,12 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    uses: thanhpt-osp/pmkt-shared/.github/workflows/reusable-build.yml@main
+    secrets: inherit
